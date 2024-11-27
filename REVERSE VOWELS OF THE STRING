@@ -1,0 +1,10 @@
+char *reverseVowels(char *s)
+{
+  char vowels[] = "aeiouAEIOU";
+
+  int l = 0, r = strlen(s) - 1;
+  while (l < r)
+  {
+    bool swapReady = true;
+    if (strchr(vowels, s[l]) == NULL)
+    {
