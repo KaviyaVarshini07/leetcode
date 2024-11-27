@@ -1,0 +1,63 @@
+bool wordPattern(char* pattern, char* s) {
+
+    int psize = 256;
+    char** p = malloc(sizeof(char*) * psize);
+    for (int i = 0; i < 256; i++) {
+        p[i] = NULL;
+    }
+    int len = strlen(pattern);
+    int lens = strlen(s);
+    int idxwords = 0;
+    for (int i = 0; i < len; i++) {
+        if (p[pattern[i]] == NULL) { // install maps word
+            int idx = 0;
+            p[pattern[i]] = malloc(sizeof(char) * (lens + 1));
+            bool insallfail = true;
+            while (idxwords < lens) {
+                char c = s[idxwords++];
+                if (c != ' ') {
+                    p[pattern[i]][idx++] = c;
+                    insallfail = false;
+                } else {
+                    break;
+                }
+            }
+            if (insallfail) return false;
+            p[pattern[i]][idx++] = ' ';
+        } else { // compare
+            for (int j = 0; j < lens; j ++) {
+                char c = s[idxwords++];
+                if (p[pattern[i]][j] != ' ') {
+                    if (p[pattern[i]][j] != c) {
+                        return false;
+                    }
+                } else {
+                    break;
+                }
+                if (idxwords == lens) break;
+            }
+        }
+    }
+    if (idxwords != lens) return false;
+    // check if  duplicate pattern
+    for (int i = 0; i < psize; i++) {
+        if (p[i] != NULL) {
+            int j = i+1;
+            for (; j < psize; j++) {
+                if (p[j] != NULL) {
+                    bool isDup = true;
+                    for (int k = 0; k < lens; k++) {
+                        if (p[i][k] != p[j][k]) {
+                            isDup = false;
+                            break;
+                        } else if ((p[i][k] == ' ') || (p[j][k] == ' ')) {
+                            break;
+                        }
+                    }
+                    if (isDup) return false;
+                }
+            }
+        }
+    }
+    return true;
+}
